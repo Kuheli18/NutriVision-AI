@@ -1,6 +1,8 @@
-Flask>=3.0
-transformers>=4.38
-torch>=2.1
-Pillow>=10.0
-numpy>=1.26
-opencv-python-headless>=4.9
+Flask
+torch
+torchvision
+scikit-learn==1.6.1
+joblib
+Pillow
+numpy
+opencv-python-headless
