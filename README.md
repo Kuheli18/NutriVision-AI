@@ -1,238 +1,232 @@
-
 # 🍎 NutriVision AI
-### AI-Powered Food Recognition & Nutrition Analysis
+### AI-Based Food Quality and Nutrition Estimation
 
-NutriVision AI is a machine learning-based web application designed to identify food items from uploaded images and provide approximate nutritional information. It combines computer vision, pretrained deep learning models, and an interactive web interface to make food analysis more accessible.
+NutriVision AI is a machine learning-based web application designed to estimate the nutritional values of food from uploaded images.
 
----
+The main objective of this project is not only to recognize food items but also to provide approximate nutritional information such as calories, protein, carbohydrates, fat, and fibre based on the selected serving size.
 
 ## ✨ Features
 
-- **AI Food Recognition:** Identifies food items from uploaded images using a pretrained Food-101 classification model.
-- **Top-3 Predictions:** Displays the three most likely food classifications with confidence scores.
-- **Fruit & Vegetable Detection:** Uses a YOLO-based object detection model to identify supported fruits and vegetables.
-- **Nutrition Estimation:** Provides approximate nutritional reference values for supported food categories.
-- **Serving Size Adjustment:** Scales nutritional values according to the serving weight entered by the user.
-- **Image Quality Analysis:** Displays basic image brightness and sharpness indicators.
-- **Interactive Interface:** Supports image upload, drag-and-drop functionality, image preview, and removal.
-- **Responsive Design:** Provides light and dark themes with a responsive layout.
-
----
+- **AI-Based Food Recognition:** Predicts food categories from uploaded images.
+- **Nutrition Estimation:** Provides approximate calories, protein, carbohydrates, fat, and fibre.
+- **Serving Size Calculator:** Adjusts nutritional values according to the selected serving size.
+- **Top-3 Predictions:** Displays the three most likely food categories.
+- **Image Quality Analysis:** Checks image brightness and sharpness.
+- **Interactive Website:** Includes image upload, drag-and-drop, preview, and light/dark themes.
 
 ## 🛠️ Technologies Used
 
-| Category | Technologies |
-|---|---|
-| Programming Language | Python, JavaScript |
-| Backend | Flask |
-| Frontend | HTML5, CSS3, JavaScript |
-| Machine Learning | PyTorch, Transformers |
-| Computer Vision | YOLO, OpenCV |
-| Model Hosting | Hugging Face |
+- Python
+- Flask
+- HTML
+- CSS
+- JavaScript
+- PyTorch
+- Torchvision
+- Scikit-learn
+- OpenCV
+- NumPy
+- Joblib
 
----
+## 📊 Dataset Information
 
-## 🧠 Machine Learning Models
+**Dataset:** Food-101
 
-NutriVision AI integrates two pretrained models for food classification and object detection.
+Food-101 is a food image dataset containing 101 food categories and 101,000 images.
 
-### 1. Food Classification
+For this project, a subset of 100 images per category was selected.
 
-- **Model:** `nateraw/food`
-- **Dataset:** Food-101
-- **Architecture:** Vision Transformer (ViT)
-- **Purpose:** Classifies food images and generates the top-3 predictions with confidence scores.
+- Total selected images: 10,100
+- Training images: 8,080
+- Testing images: 2,020
+- Train-test split: 80:20
+- Data splitting: Stratified sampling
 
-Model source: https://huggingface.co/nateraw/food
+The dataset was used to extract image features and train machine learning classification models.
 
-Dataset source: https://huggingface.co/datasets/ethz/food101
+## 🧠 Methodology and Algorithms
 
-### 2. Fruit and Vegetable Detection
+The project uses a feature extraction and classification approach.
 
-- **Model:** `Piyu12/fruit-veg-yolo11m-detector`
-- **Architecture:** YOLO11m
-- **Purpose:** Detects supported fruits and vegetables in uploaded images and identifies their locations.
+### 1. Feature Extraction – ResNet50
 
-Model source: https://huggingface.co/Piyu12/fruit-veg-yolo11m-detector
+A pretrained ResNet50 model was used as a feature extractor.
 
-The detector's training dataset and supported classes are described in its model documentation.
+- The final classification layer was removed.
+- The network extracts 2048-dimensional feature vectors from food images.
+- L2 normalization was applied to the extracted features.
 
-**Note:** Both models are pretrained models integrated into the application. They are not trained from scratch as part of this project.
+### 2. Machine Learning Classification Algorithms
 
----
+Three machine learning algorithms were implemented and evaluated:
 
-## ⚙️ Algorithms and Methodology
+**1. Support Vector Machine (SVM)**
+- Uses an RBF kernel.
+- Helps classify food images based on extracted features.
+- Tuned using C = 10 and gamma = scale.
 
-NutriVision AI combines image classification, object detection, and reference-based nutrition estimation.
+**2. K-Nearest Neighbors (KNN)**
+- Uses 5 nearest neighbors.
+- Uses distance-based weighting and cosine distance.
+- Classifies images based on similarity between feature vectors.
 
-### 1. Food Image Classification
+**3. Decision Tree**
+- Uses a tree-based classification approach.
+- Maximum depth: 40.
+- Minimum samples per leaf: 2.
+- Balanced class weights were used.
 
-1. The user uploads a food image.
-2. The image is preprocessed and passed to the pretrained Food-101 classification model.
-3. The Vision Transformer analyzes image features and predicts the food category.
-4. The application displays the top-3 predicted categories with their confidence scores.
+### 3. Model Evaluation
 
-### 2. Fruit and Vegetable Detection
+The models were evaluated using classification metrics such as:
 
-1. The uploaded image is passed to the pretrained YOLO11m detection model.
-2. The model identifies supported fruits and vegetables.
-3. Detected objects are associated with their predicted labels and confidence scores.
-4. Bounding boxes are used to indicate the detected objects in the image.
+- Accuracy
+- Precision
+- Recall
+- F1-score
 
-### 3. Nutrition Estimation
+### 4. Final Model Selection
 
-The application uses a predefined nutrition reference database containing approximate nutritional values per 100 grams.
+After evaluating the three algorithms, **Support Vector Machine (SVM) was selected as the final model** for the NutriVision AI website because it achieved the best performance among the evaluated models.
 
-The predicted food category is matched with the available nutrition data. The nutritional values are then adjusted according to the serving size entered by the user.
+The trained SVM model is saved as `best_svm.pkl` and is used by the Flask backend for food prediction.
 
-**Calculation:**
+## 📈 Experimental Results
 
-Estimated nutrient amount = (Nutrient value per 100 g × Serving size in grams) / 100
+The final SVM model achieved the following results on the test dataset:
 
-The application provides estimates for available nutritional information, such as calories, protein, carbohydrates, and fat.
+| Evaluation Metric | Result |
+|---|---:|
+| Accuracy | **55.69%** |
+| Macro F1-score | **55.39%** |
 
-### 4. Image Quality Analysis
+These results represent the experimental evaluation of the trained SVM model on the selected Food-101 subset.
 
-Basic image processing techniques are used to calculate image brightness and sharpness indicators. These indicators help users understand the visual quality of the uploaded image.
+The SVM model was selected over KNN and Decision Tree based on the comparative evaluation.
 
----
+## 🥗 Nutrition Estimation
 
-## 🧪 Experimental Results and Model Evaluation
+After predicting the food category, the application retrieves approximate nutritional values from a predefined nutrition reference dictionary.
 
-The project was evaluated through sample image testing to examine the functionality of food classification, fruit and vegetable detection, and nutrition estimation.
+The nutritional information includes:
 
-### Model Performance Comparison
+- Calories (kcal)
+- Protein (g)
+- Carbohydrates (g)
+- Fat (g)
+- Fibre (g)
 
-| Model | Main Task | Evaluation Output |
-|---|---|---|
-| Food-101 Classification Model | Food image classification | Top-3 predictions and confidence scores |
-| YOLO11m Detector | Fruit and vegetable detection | Object labels, confidence scores, and bounding boxes |
+Values are stored per 100 grams and adjusted according to the user's selected serving size.
 
-### Application Testing
+**Note:** Nutrition values are approximate reference-based estimates, not direct measurements from the image. Prediction and nutrition availability depend on the supported food categories.
 
-The following functionalities are considered during application testing:
+## 🖼️ Screenshots
 
-| Test Case | Expected Result |
-|---|---|
-| Upload a supported food image | Food category prediction |
-| Analyze an image with multiple supported objects | Object detection results |
-| View top-3 predictions | Three predicted categories with confidence scores |
-| Change serving size | Updated nutritional estimates |
-| Upload an unclear or unsupported image | Potentially incorrect or unsupported prediction |
-| Change website theme | Light and dark themes work correctly |
+Screenshots of the working application are included below.
 
-**Evaluation Note:** The table describes the application's test cases and expected behaviour. Independent quantitative accuracy measurements for the complete application have not yet been established. Model confidence scores should not be treated as overall model accuracy.
+### 1. Home Page
+![NutriVision AI Home Page](screenshots/homepage.png)
 
----
+### 2. Food Image Upload
+![Food Image Upload](screenshots/upload.png)
 
-## 📂 Project Structure
+### 3. Food Prediction and Nutrition Results
+![Food Prediction and Nutrition Results](screenshots/results.png)
 
-```text
-AI_Food_Quality_Nutrition_Website/
-│
-├── server.py
-├── requirements.txt
-├── README.md
-│
-├── templates/
-│   └── index.html
-│
-└── static/
-    ├── style.css
-    └── script.js
-```
+### 4. Serving Size and Nutrition Estimation
+![Serving Size Calculator](screenshots/nutrition.png)
 
----
+## 🚀 How to Run the Project
 
-## 📚 Dataset and Model Sources
-
-The project integrates pretrained models hosted on Hugging Face.
-
-| Resource | Source |
-|---|---|
-| Food-101 Classification Model | https://huggingface.co/nateraw/food |
-| Food-101 Dataset | https://huggingface.co/datasets/ethz/food101 |
-| Fruit and Vegetable Detection Model | https://huggingface.co/Piyu12/fruit-veg-yolo11m-detector |
-
-The pretrained model weights are downloaded when required by the application. They are not included in the GitHub repository.
-
----
-
-## 🚀 Installation and Setup
-
-### Prerequisites
-
-- Python 3.10 or later
-- Visual Studio Code
-- Internet connection for downloading pretrained models
-
-### Step 1: Clone the Repository
+### Step 1: Clone the repository
 
 ```bash
 git clone https://github.com/Kuheli18/NutriVision-AI.git
 ```
 
-### Step 2: Open the Project
-
-Open the cloned project folder in Visual Studio Code.
-
-### Step 3: Install Dependencies
-
-Open the terminal and execute:
+### Step 2: Open the project folder
 
 ```bash
-python -m pip install -r requirements.txt
+cd NutriVision-AI
 ```
 
-### Step 4: Run the Application
+### Step 3: Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 4: Ensure the trained model files are available
+
+Place the required model files inside the `models` folder:
+
+- `best_svm.pkl`
+- `food_classes.pkl`
+
+The trained model files must be obtained from the project's model files or training workflow if they are not included in the repository.
+
+### Step 5: Run the application
 
 ```bash
 python server.py
 ```
 
-### Step 5: Open in Browser
-
-Visit:
+### Step 6: Open in your browser
 
 ```text
 http://127.0.0.1:5000
 ```
 
-The application will be available locally in your browser.
+## 📁 Project Structure
 
-**Note:** The first model download may take several minutes depending on your internet connection.
-
----
+```text
+NutriVision-AI/
+│
+├── models/
+│   ├── best_svm.pkl
+│   └── food_classes.pkl
+│
+├── static/
+│   ├── script.js
+│   └── style.css
+│
+├── templates/
+│   └── index.html
+│
+├── screenshots/
+│   ├── homepage.png
+│   ├── upload.png
+│   ├── results.png
+│   └── nutrition.png
+│
+├── server.py
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
 
 ## ⚠️ Limitations
 
-- Food recognition may produce incorrect predictions for unfamiliar or visually similar foods.
-- The application supports only the food categories covered by its integrated models and nutrition reference data.
-- Nutritional values are approximate reference values, not measurements extracted directly from an image.
-- Serving weight is entered manually by the user and is not estimated by the model.
-- A photograph cannot reliably establish food freshness, spoilage, contamination, hidden ingredients, or food safety.
-- Detection and nutrition estimation depend on the available model classes and reference data.
-- Complex meals containing multiple ingredients may not receive a complete nutritional breakdown.
-
----
+- The food classifier is trained on a selected subset of Food-101.
+- It can only predict categories included in its training classes.
+- Nutrition values are approximate and depend on the predefined reference database.
+- The estimated nutrition may differ from actual values depending on ingredients, preparation methods, and portion size.
 
 ## 🔮 Future Improvements
 
-- Expand the supported food and nutrition database.
-- Improve recognition accuracy using a larger and more diverse dataset.
-- Develop more comprehensive multi-food meal analysis.
-- Improve nutritional estimation and ingredient identification.
-- Add a dedicated quantitative model evaluation using a separate test dataset.
-- Deploy the application on a public hosting platform.
+- Expand food recognition to include more fruits and vegetables.
+- Improve classification accuracy with larger and more diverse datasets.
+- Use more detailed nutrition databases.
+- Improve nutrition estimation using food segmentation and portion-size estimation.
+
+## 👩‍💻 Developed By
+
+**Kuheli Adhikari**
+
+B.Tech – Computer Science and Engineering (AI & ML)
+
+Ghani Khan Choudhury Institute of Engineering and Technology
 
 ---
 
-## 🎓 Project Purpose
-
-NutriVision AI is developed as an educational machine learning project to explore the practical integration of computer vision, pretrained deep learning models, and web development.
-
-It demonstrates how AI-based image recognition can be combined with an interactive web application to provide basic food and nutrition insights.
-
----
-
-**Disclaimer:** NutriVision AI is an educational prototype. It is not a certified nutrition, medical, or food-safety assessment tool.
+**Project:** NutriVision AI – AI-Based Food Quality and Nutrition Estimation
