@@ -1,4 +1,3 @@
-
 const input = document.getElementById("foodImage");
 const zone = document.getElementById("dropzone");
 const previewWrap = document.getElementById("previewWrap");
@@ -163,7 +162,7 @@ function show(d) {
 
     }
 
-    predictionBox.textContent = d.detection_type || "Food Analysis";
+    predictionBox.textContent = d.detection_type || "Fine-Tuned ResNet50 (Food-101)";
 
 
     // TOP PREDICTIONS
@@ -298,13 +297,14 @@ function calc() {
     document.getElementById("grams").textContent = g;
 
     const f = g / 100;
+    const fibrePer100g = Number(nutrition.fibre ?? nutrition.fiber ?? 0);
 
     const items = [
         ["Calories", Math.round(nutrition.calories * f) + " kcal"],
         ["Protein", (nutrition.protein * f).toFixed(1) + " g"],
         ["Carbs", (nutrition.carbs * f).toFixed(1) + " g"],
         ["Fat", (nutrition.fat * f).toFixed(1) + " g"],
-        ["Fibre", (nutrition.fiber * f).toFixed(1) + " g"]
+        ["Fibre", (fibrePer100g * f).toFixed(1) + " g"]
     ];
 
     const grid = document.getElementById("nutritionGrid");
