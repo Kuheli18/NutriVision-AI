@@ -87,22 +87,18 @@ The models were evaluated using classification metrics such as:
 
 ### 4. Final Model Selection
 
-After evaluating the three algorithms, **Support Vector Machine (SVM) was selected as the final model** for the NutriVision AI website because it achieved the best performance among the evaluated models.
-
-The trained SVM model is saved as `best_svm.pkl` and is used by the Flask backend for food prediction.
+After evaluating the three classical algorithms (with SVM achieving the best baseline among them), a **fine-tuned ResNet34 model (`best_nutrivision_model.pt`)** trained on the full 101 Food-101 classes was selected as the primary model for the NutriVision AI website due to its significantly higher accuracy.
 
 ## 📈 Experimental Results
 
-The final SVM model achieved the following results on the test dataset:
+The fine-tuned **ResNet34** model achieved the following results on the Food-101 test dataset (improving over the earlier **55.69%** accuracy / **55.39%** Macro F1-score SVM baseline):
 
 | Evaluation Metric | Result |
 |---|---:|
-| Accuracy | **55.69%** |
-| Macro F1-score | **55.39%** |
-
-These results represent the experimental evaluation of the trained SVM model on the selected Food-101 subset.
-
-The SVM model was selected over KNN and Decision Tree based on the comparative evaluation.
+| Accuracy | **84.27%** |
+| Macro Precision | **84.37%** |
+| Macro Recall | **84.27%** |
+| Macro F1-score | **84.26%** |
 
 ## 🥗 Nutrition Estimation
 
@@ -141,92 +137,4 @@ Screenshots of the working application are included below.
 ### Step 1: Clone the repository
 
 ```bash
-git clone https://github.com/Kuheli18/NutriVision-AI.git
-```
-
-### Step 2: Open the project folder
-
-```bash
-cd NutriVision-AI
-```
-
-### Step 3: Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Step 4: Ensure the trained model files are available
-
-Place the required model files inside the `models` folder:
-
-- `best_svm.pkl`
-- `food_classes.pkl`
-
-The trained model files must be obtained from the project's model files or training workflow if they are not included in the repository.
-
-### Step 5: Run the application
-
-```bash
-python server.py
-```
-
-### Step 6: Open in your browser
-
-```text
-http://127.0.0.1:5000
-```
-
-## 📁 Project Structure
-
-```text
-NutriVision-AI/
-│
-├── models/
-│   ├── best_svm.pkl
-│   └── food_classes.pkl
-│
-├── static/
-│   ├── script.js
-│   └── style.css
-│
-├── templates/
-│   └── index.html
-│
-├── screenshots/
-│   ├── homepage.png
-│   ├── upload.png
-│   ├── results.png
-│   └── nutrition.png
-│
-├── server.py
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
-
-## ⚠️ Limitations
-
-- The food classifier is trained on a selected subset of Food-101.
-- It can only predict categories included in its training classes.
-- Nutrition values are approximate and depend on the predefined reference database.
-- The estimated nutrition may differ from actual values depending on ingredients, preparation methods, and portion size.
-
-## 🔮 Future Improvements
-
-- Expand food recognition to include more fruits and vegetables.
-- Improve classification accuracy with larger and more diverse datasets.
-- Use more detailed nutrition databases.
-- Improve nutrition estimation using food segmentation and portion-size estimation.
-
-## 👩‍💻 Developed By
-
-**Kuheli Adhikari**
-
-B.Tech – Computer Science and Engineering (AI & ML)
-
-Ghani Khan Choudhury Institute of Engineering and Technology
-
----
-
-**Project:** NutriVision AI – AI-Based Food Quality and Nutrition Estimation
+git clone [https://github.com/Kuheli18/NutriVision-AI.git](https://github.com/Kuheli18/NutriVision-AI.git)
