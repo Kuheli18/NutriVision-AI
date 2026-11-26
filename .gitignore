@@ -1,11 +1,18 @@
+# Model weights & large artifacts
+models/*.pt
+models/*.pth
+models/*.pkl
+models/*.zip
+
+# Python & virtual environments
 __pycache__/
 *.py[cod]
+*$py.class
 venv/
-env/
 .venv/
+env/
+
+# Environment & OS files
 .env
-*.pkl
-*.pt
-*.pth
-.ipynb_checkpoints/
 .DS_Store
+Thumbs.db

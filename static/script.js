@@ -9,6 +9,7 @@ const results = document.getElementById("results");
 
 let chosen = null;
 let nutrition = null;
+let previewUrl = null;
 
 
 // STATUS MESSAGE
@@ -32,7 +33,11 @@ function choose(file) {
 
     chosen = file;
 
-    preview.src = URL.createObjectURL(file);
+    if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+    }
+    previewUrl = URL.createObjectURL(file);
+    preview.src = previewUrl;
 
     previewWrap.hidden = false;
     zone.hidden = true;
@@ -76,6 +81,11 @@ zone.addEventListener("drop", e => {
 document.getElementById("remove").addEventListener("click", () => {
 
     chosen = null;
+
+    if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+        previewUrl = null;
+    }
 
     input.value = "";
     preview.src = "";
@@ -162,7 +172,7 @@ function show(d) {
 
     }
 
-    predictionBox.textContent = d.detection_type || "Fine-Tuned ResNet50 (Food-101)";
+    predictionBox.textContent = d.detection_type || "Fine-Tuned ResNet34 (Food-101)";
 
 
     // TOP PREDICTIONS

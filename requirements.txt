@@ -1,8 +1,8 @@
-Flask
+flask
 torch
 torchvision
-scikit-learn==1.6.1
-joblib
-Pillow
+pillow
 numpy
-opencv-python-headless
+opencv-python
+scikit-learn
+joblib
