@@ -7,10 +7,10 @@ The main objective of this project is not only to recognize food items but also 
 
 ## ✨ Features
 
-- **AI-Based Food Recognition:** Predicts food categories from uploaded images.
+- **AI-Based Food Recognition:** Predicts food categories from uploaded images across 101 dishes.
 - **Nutrition Estimation:** Provides approximate calories, protein, carbohydrates, fat, and fibre.
 - **Serving Size Calculator:** Adjusts nutritional values according to the selected serving size.
-- **Top-3 Predictions:** Displays the three most likely food categories.
+- **Top-3 Predictions:** Displays the three most likely food categories with confidence scores.
 - **Image Quality Analysis:** Checks image brightness and sharpness.
 - **Interactive Website:** Includes image upload, drag-and-drop, preview, and light/dark themes.
 
@@ -32,62 +32,39 @@ The main objective of this project is not only to recognize food items but also 
 
 **Dataset:** Food-101
 
-Food-101 is a food image dataset containing 101 food categories and 101,000 images.
+Food-101 is a benchmark food image dataset containing **101 food categories** and **101,000 images** (1,000 images per category).
 
-For this project, a subset of 100 images per category was selected.
-
-- Total selected images: 10,100
-- Training images: 8,080
-- Testing images: 2,020
-- Train-test split: 80:20
-- Data splitting: Stratified sampling
-
-The dataset was used to extract image features and train machine learning classification models.
+- **Training images:** 75,750 (750 per category)
+- **Testing images:** 25,250 (250 per category)
+- **Preprocessing:** Resize to 256 px, center crop to 224×224 px, and ImageNet normalization
 
 ## 🧠 Methodology and Algorithms
 
-The project uses a feature extraction and classification approach.
+The project evolved from classical machine learning baselines to end-to-end deep transfer learning.
 
-### 1. Feature Extraction – ResNet50
+### 1. Baseline Experiments (Feature Extraction + Classical ML)
 
-A pretrained ResNet50 model was used as a feature extractor.
+Initially, a pretrained **ResNet50** backbone (with the final classification layer removed) was used to extract 2048-dimensional L2-normalized feature vectors on a stratified 10,100-image subset, evaluated across three classifiers:
 
-- The final classification layer was removed.
-- The network extracts 2048-dimensional feature vectors from food images.
-- L2 normalization was applied to the extracted features.
+- **Support Vector Machine (SVM):** RBF kernel (`C = 10`, `gamma = scale`) — best classical baseline (**55.69%** accuracy, **55.39%** Macro F1-score)
+- **K-Nearest Neighbors (KNN):** 5 nearest neighbors with cosine distance weighting
+- **Decision Tree:** Maximum depth 40, minimum samples per leaf 2, balanced class weights
 
-### 2. Machine Learning Classification Algorithms
+### 2. Final Model – Fine-Tuned ResNet34
 
-Three machine learning algorithms were implemented and evaluated:
+To significantly improve classification accuracy across all 101 food categories, a **ResNet34** convolutional neural network was fine-tuned end-to-end on the full Food-101 dataset.
 
-**1. Support Vector Machine (SVM)**
-- Uses an RBF kernel.
-- Helps classify food images based on extracted features.
-- Tuned using C = 10 and gamma = scale.
-
-**2. K-Nearest Neighbors (KNN)**
-- Uses 5 nearest neighbors.
-- Uses distance-based weighting and cosine distance.
-- Classifies images based on similarity between feature vectors.
-
-**3. Decision Tree**
-- Uses a tree-based classification approach.
-- Maximum depth: 40.
-- Minimum samples per leaf: 2.
-- Balanced class weights were used.
+- Replaced the final fully connected layer with a 101-class linear classifier
+- Saved the best checkpoint as `best_nutrivision_model.pt` for inference in the Flask backend
 
 ### 3. Model Evaluation
 
-The models were evaluated using classification metrics such as:
+The models were evaluated using standard multi-class classification metrics:
 
 - Accuracy
-- Precision
-- Recall
-- F1-score
-
-### 4. Final Model Selection
-
-After evaluating the three classical algorithms (with SVM achieving the best baseline among them), a **fine-tuned ResNet34 model (`best_nutrivision_model.pt`)** trained on the full 101 Food-101 classes was selected as the primary model for the NutriVision AI website due to its significantly higher accuracy.
+- Macro Precision
+- Macro Recall
+- Macro F1-score
 
 ## 📈 Experimental Results
 
@@ -102,7 +79,7 @@ The fine-tuned **ResNet34** model achieved the following results on the Food-101
 
 ## 🥗 Nutrition Estimation
 
-After predicting the food category, the application retrieves approximate nutritional values from a predefined nutrition reference dictionary.
+After predicting the food category, the application retrieves approximate nutritional values from a predefined nutrition reference dictionary covering all 101 Food-101 categories.
 
 The nutritional information includes:
 
@@ -114,7 +91,7 @@ The nutritional information includes:
 
 Values are stored per 100 grams and adjusted according to the user's selected serving size.
 
-**Note:** Nutrition values are approximate reference-based estimates, not direct measurements from the image. Prediction and nutrition availability depend on the supported food categories.
+**Note:** Nutrition values are approximate reference-based estimates, not direct measurements from the image.
 
 ## 🖼️ Screenshots
 
